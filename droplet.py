@@ -17,6 +17,7 @@ MY_RESERVED_IP = os.environ.get('MY_RESERVED_IP')
 
 manager = digitalocean.Manager()
 
+
 @click.group()
 def cli():  # pylint: disable=missing-function-docstring
     pass
@@ -149,6 +150,8 @@ def rebuild_remote_dev_server():
         sleep(5)
         retry_count += 1
         droplet = get_droplet(DROPLET)
+        # TODO: check if droplet is running by action
+        action = droplet.get_actions()
         if droplet.status == 'active':
             ip = digitalocean.FloatingIP(   # pylint: disable=invalid-name
                 token=manager.token,
