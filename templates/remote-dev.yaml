@@ -1,0 +1,7 @@
+#cloud-config
+packages:
+    - docker.io
+package_reboot_if_required: true
+swap:
+filename: /swapfile
+size: 4294967296
