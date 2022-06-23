@@ -162,6 +162,7 @@ def rebuild_remote_dev_server():
         if status:
             retry_count += 1
             try:
+                # TODO: check if ip is correct
                 ip = digitalocean.FloatingIP(   # pylint: disable=invalid-name
                     token=manager.token,
                     ip=MY_RESERVED_IP
