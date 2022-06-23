@@ -150,10 +150,10 @@ def rebuild_remote_dev_server():
         retry_count += 1
         droplet = get_droplet(DROPLET)
         if droplet.status == 'active':
-            ip = digitalocean.FloatingIP(
+            ip = digitalocean.FloatingIP(   # pylint: disable=invalid-name
                 token=manager.token,
                 ip=MY_RESERVED_IP
-            ).load()  # pylint: disable=invalid-name
+            ).load()
             try:
                 ip.assign(droplet_id=droplet.id)
             except digitalocean.baseapi.DataReadError:
