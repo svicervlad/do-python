@@ -154,7 +154,7 @@ def rebuild_remote_dev_server():
         droplet = get_droplet(DROPLET)
         actions = droplet.get_actions()
         status = False
-        if retry_count == 1:
+        if count_wait > 2:
             click.echo('Waiting for droplet to be ready')
         for action in actions:
             if action.type == 'create' and action.status == 'completed':
