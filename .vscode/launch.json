@@ -9,6 +9,8 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
+      "envFile": "${workspaceFolder}/.env",
+      "args": ["rebuild-dev-server"],
       "console": "integratedTerminal",
       "justMyCode": true
     }

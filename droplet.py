@@ -144,27 +144,35 @@ def rebuild_remote_dev_server():
     droplet = create_droplet(name=DROPLET, region='fra1', size_slug='s-2vcpu-4gb',
                              image='ubuntu-22-04-x64', tags=['remote-dev'], user_data=clound_init)
     sleep(10)
-    max_retries = 15
+    max_retries = 3
     retry_count = 0
-    while retry_count < max_retries:
-        sleep(5)
-        retry_count += 1
+    max_timewait = int(120 / 3)
+    count_wait = 0
+    while retry_count < max_retries or count_wait < max_timewait:
+        count_wait += 1
+        sleep(3)
         droplet = get_droplet(DROPLET)
-        # TODO: check if droplet is running by action
-        action = droplet.get_actions()
-        if droplet.status == 'active':
-            ip = digitalocean.FloatingIP(   # pylint: disable=invalid-name
-                token=manager.token,
-                ip=MY_RESERVED_IP
-            ).load()
+        actions = droplet.get_actions()
+        status = False
+        if retry_count == 1:
+            click.echo('Waiting for droplet to be ready')
+        for action in actions:
+            if action.type == 'create' and action.status == 'completed':
+                status = True
+        if status:
+            retry_count += 1
             try:
+                ip = digitalocean.FloatingIP(   # pylint: disable=invalid-name
+                    token=manager.token,
+                    ip=MY_RESERVED_IP
+                ).load()
                 ip.assign(droplet_id=droplet.id)
-            except digitalocean.baseapi.DataReadError:
+            except (digitalocean.baseapi.DataReadError, digitalocean.baseapi.NotFoundError):
                 click.echo(
                     f'Retry assign reserved ip {retry_count}/{max_retries}')
-                click.echo(f'Droplet {droplet.name} not active yet')
-                click.echo(f'Droplet status: {droplet.status}')
+                click.echo(f'Droplet {droplet.name} not completed yet or ip not found')
                 click.echo(f'Droplet id: {droplet.id}')
+                sleep(5)
             else:
                 click.echo(f'Droplet {DROPLET} created')
                 click.echo(f"Droplet ip: {MY_RESERVED_IP}")
