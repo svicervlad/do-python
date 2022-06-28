@@ -90,7 +90,7 @@ def create_droplet(
     name: str = DROPLET,
     region: str = 'fra1',
     size_slug: str = "s-2vcpu-4gb",
-    image: str = "ubuntu-22-04-x64",
+    image: str = "debian-11-x64",
     user_data: str = None,
     tags: list = []
 ):  # pylint: disable=dangerous-default-value,too-many-arguments
@@ -118,7 +118,7 @@ def create_droplet(
 @click.argument('name', default=DROPLET)
 @click.argument('region', default='fra1')
 @click.argument('size_slug', default='s-2vcpu-4gb')
-@click.argument('image', default='ubuntu-20-04-x64')
+@click.argument('image', default='debian-11-x64')
 @click.argument('template', default=CLOUD_INIT_DEFAULT_TEMPLATE)
 @click.argument('tags', default=[])
 def create_droplet_cmd(name, region, size_slug, image, template, tags):
@@ -142,7 +142,7 @@ def rebuild_remote_dev_server():
     click.echo(f'Creating droplet {DROPLET}')
     clound_init = load_cloud_template(CLOUD_INIT_DEFAULT_TEMPLATE)
     droplet = create_droplet(name=DROPLET, region='fra1', size_slug='s-2vcpu-4gb',
-                             image='ubuntu-20-04-x64', tags=['remote-dev'], user_data=clound_init)
+                             image='debian-11-x64', tags=['remote-dev'], user_data=clound_init)
     sleep(10)
     max_retries = 3
     retry_count = 0
