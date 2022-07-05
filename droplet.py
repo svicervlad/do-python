@@ -23,7 +23,7 @@ def cli():  # pylint: disable=missing-function-docstring
     pass
 
 
-def load_cloud_template(name):
+def load_cloud_template(name: str) -> str:
     '''
     Load template for cloud init
     '''
@@ -31,7 +31,7 @@ def load_cloud_template(name):
         return f.read()
 
 
-def get_droplet(name):
+def get_droplet(name: str) -> digitalocean.Droplet | None:
     '''
     Get droplet by name
     '''
@@ -45,7 +45,7 @@ def get_droplet(name):
 
 @cli.command(name='get-droplet')
 @click.argument('name')
-def get_droplet_cmd(name):
+def get_droplet_cmd(name: str):
     '''
     Get droplet by name
     '''
@@ -63,7 +63,7 @@ def get_droplet_cmd(name):
         click.echo(f'Droplet {name} not found')
 
 
-def destroy_droplet(name):
+def destroy_droplet(name: str) -> digitalocean.Droplet | None:
     '''
     Destroy droplet by name
     '''
@@ -71,11 +71,12 @@ def destroy_droplet(name):
     if droplet:
         droplet.destroy()
         return droplet
+    return None
 
 
 @cli.command(name='destroy-droplet')
 @click.argument('name')
-def destroy_droplet_cmd(name):
+def destroy_droplet_cmd(name: str):
     '''
     Destroy droplet by name
     '''
